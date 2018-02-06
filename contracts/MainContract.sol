@@ -1,9 +1,11 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.19;
 
+import "libs/AddressSet.sol";
+import "interfaces/MainI.sol";
 
-contract MainContract {
-    address public admin;//Admin address
-    address[] public hotels;
+contract MainContract is MainI {
+    address admin;//Admin address
+    AddressSet.Data  hotels;
 
     function MainContract() public payable {
         //HotelByte admin address is the creator of first contract
@@ -29,7 +31,7 @@ contract MainContract {
     onlyAdmin
     {
         AddHotel();
-        hotels.push(hotelAddress);
+        require(AddressSet.insert(hotels, hotelAddress));
     }
 
     function removeHotel(address hotelAddress)
@@ -37,31 +39,7 @@ contract MainContract {
     onlyAdmin
     {
         RemoveHotel();
-        uint i = IndexOf(hotels, hotelAddress);
-        RemoveByIndex(i);
+        require(AddressSet.remove(hotels, hotelAddress));
     }
 
-    /** Finds the index of a given value in an array. */
-    function IndexOf(address[] array, address value)
-    private
-    pure
-    returns (uint)
-    {
-        uint i = 0;
-        while (array[i] != value) {
-            i++;
-        }
-        return i;
-    }
-
-    /** Removes the value at the given index in an array. */
-    function RemoveByIndex(uint i)
-    private
-    {
-        while (i < hotels.length - 1) {
-            hotels[i] = hotels[i + 1];
-            i++;
-        }
-        hotels.length--;
-    }
 }
