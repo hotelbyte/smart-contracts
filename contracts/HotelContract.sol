@@ -1,12 +1,17 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.19;
 
-contract HotelContract {
-    address public admin;//Admin address
-    address public hotel = 0x01;//Hotel address
-    address[] public rooms;
+import "libs/AddressSet.sol";
+import "interfaces/HotelI.sol";
 
-    function HotelContract() public payable {
-        //HotelByte admin address is the creator of first contract
+
+contract HotelContract is HotelI {
+    address admin;//Admin address
+    address hotel;//Hotel address
+    AddressSet.Data rooms;
+    //TODO Fill Hotel level info
+
+    function HotelContract(address hotelAdminAddress) public payable {
+        hotel = hotelAdminAddress;
         admin = msg.sender;
     }
 
@@ -29,7 +34,7 @@ contract HotelContract {
     onlyAdminOrHotel
     {
         AddRoom();
-        rooms.push(roomAddress);
+        require(AddressSet.insert(rooms, roomAddress));
     }
 
     function removeRoom(address roomAddress)
@@ -37,31 +42,6 @@ contract HotelContract {
     onlyAdminOrHotel
     {
         RemoveRoom();
-        uint i = IndexOf(rooms, roomAddress);
-        RemoveByIndex(i);
-    }
-
-    /** Finds the index of a given value in an array. */
-    function IndexOf(address[] array, address value)
-    private
-    pure
-    returns (uint)
-    {
-        uint i = 0;
-        while (array[i] != value) {
-            i++;
-        }
-        return i;
-    }
-
-    /** Removes the value at the given index in an array. */
-    function RemoveByIndex(uint i)
-    private
-    {
-        while (i < rooms.length - 1) {
-            rooms[i] = rooms[i + 1];
-            i++;
-        }
-        rooms.length--;
+        require(AddressSet.remove(rooms, roomAddress));
     }
 }
