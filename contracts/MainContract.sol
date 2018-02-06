@@ -4,7 +4,7 @@ import "libs/AddressSet.sol";
 import "interfaces/MainI.sol";
 
 contract MainContract is MainI {
-    address admin;//Admin address
+    address public admin;//Admin address
     AddressSet.Data  hotels;
 
     function MainContract() public payable {

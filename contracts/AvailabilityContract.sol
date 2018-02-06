@@ -10,12 +10,13 @@ contract AvailabilityContract is AvailabilityI {
     enum State {Active, Locked, Inactive}
     State public state;
 
-    // Ensure that `msg.value` is an even number.
+    // Ensure that `initPrice` is an even number.
     // Division will truncate if it is an odd number.
     // Check via multiplication that it wasn't an odd number.
-    function AvailabilityContract(address adminAddress) public payable {
-        price = msg.value / 2;
-        require((2 * price) == msg.value);
+    function AvailabilityContract(address adminAddress, uint initPrice) public {
+        uint dividedPrice = initPrice / 2;
+        require((2 * dividedPrice) == initPrice);
+        price = initPrice;
         hotel = msg.sender;
         admin = adminAddress;
     }
@@ -31,7 +32,7 @@ contract AvailabilityContract is AvailabilityI {
     }
 
     modifier onlyAdmin() {
-        require( msg.sender == hotel || msg.sender == admin);
+        require(msg.sender == hotel || msg.sender == admin);
         _;
     }
 
@@ -53,6 +54,16 @@ contract AvailabilityContract is AvailabilityI {
 
     function getPrice() public returns (uint256){
         return price;
+    }
+
+    function changePrice(uint changedPrice)
+    public
+    onlyAdmin
+    inState(State.Active)
+    {
+        uint dividedPrice = changedPrice / 2;
+        require((2 * dividedPrice) == changedPrice);
+        price = changedPrice;
     }
 
     function lock()
@@ -83,7 +94,7 @@ contract AvailabilityContract is AvailabilityI {
     {
         Abort();
         state = State.Active;
-        buyer.transfer(this.balance);
+        buyer.transfer(price);
         delete buyer;
     }
 
