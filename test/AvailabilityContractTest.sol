@@ -4,10 +4,9 @@ import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
 import "../contracts/AvailabilityContract.sol";
 
-contract TestAvailabilityContract {
+contract AvailabilityContractTest {
     // Truffle will send the TestContract one Ether after deploying the contract.
     uint public initialBalance = 2 ether;
-
 
     function testInitialPrice() public {
         AvailabilityContract avail = new AvailabilityContract(DeployedAddresses.AvailabilityContract(),200 ether);
@@ -21,8 +20,8 @@ contract TestAvailabilityContract {
     }
 
 //    function testLockAndRelease() public {
-//        AvailabilityContract avail = new AvailabilityContract(DeployedAddresses.AvailabilityContract(),2 ether);
-//        avail.lock.value(2 ether)();
+//        AvailabilityContract avail = AvailabilityContract(DeployedAddresses.AvailabilityContract());
+//        avail.lock.gas(200000).value(200)();
 //    }
 
 }

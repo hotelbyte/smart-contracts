@@ -52,7 +52,10 @@ contract AvailabilityContract is AvailabilityI {
     event Invalidate();
     event Abort();
 
-    function getPrice() public returns (uint256){
+    function getPrice()
+    public
+    returns (uint256)
+    {
         return price;
     }
 
