@@ -19,6 +19,7 @@ contract AvailabilityContract is AvailabilityI {
         price = initPrice;
         hotel = msg.sender;
         admin = adminAddress;
+        state = State.Active;
     }
 
     modifier condition(bool _condition) {
@@ -48,11 +49,14 @@ contract AvailabilityContract is AvailabilityI {
 
 
     event Lock();
+    event UnLock();
     event Purchase();
     event Invalidate();
-    event Abort();
 
-    function getPrice() public returns (uint256){
+    function getPrice()
+    public
+    returns (uint256)
+    {
         return price;
     }
 
@@ -63,13 +67,14 @@ contract AvailabilityContract is AvailabilityI {
     {
         uint dividedPrice = changedPrice / 2;
         require((2 * dividedPrice) == changedPrice);
+        require(this.balance == 0);
         price = changedPrice;
     }
 
     function lock()
     public
     inState(State.Active)
-    condition(msg.value == (2 * price))
+    condition(msg.value == price)
     payable
     {
         Lock();
@@ -77,22 +82,12 @@ contract AvailabilityContract is AvailabilityI {
         state = State.Locked;
     }
 
-    function invalidate()
-    public
-    onlyAdmin
-    inState(State.Active)
-    {
-        Invalidate();
-        state = State.Inactive;
-        hotel.transfer(this.balance);
-    }
-
-    function abort()
+    function unlock()
     public
     onlyBuyerOrAdmin
     inState(State.Locked)
     {
-        Abort();
+        UnLock();
         state = State.Active;
         buyer.transfer(price);
         delete buyer;
@@ -110,5 +105,14 @@ contract AvailabilityContract is AvailabilityI {
         // can call in again here.
         state = State.Inactive;
         hotel.transfer(this.balance);
+    }
+
+    function invalidate()
+    public
+    onlyAdmin
+    inState(State.Active)
+    {
+        Invalidate();
+        state = State.Inactive;
     }
 }

@@ -7,9 +7,9 @@ interface AvailabilityI{
 
     function lock() public payable;
 
-    function purchase() public;
+    function unlock() public;
 
-    function abort() public;
+    function purchase() public;
 
     function invalidate() public;
 }
