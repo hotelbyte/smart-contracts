@@ -44,43 +44,43 @@ contract RoomContract is RoomI {
         require(AddressSet.remove(availabilities, availabilityAddress));
     }
 
-    function purchase(address[] availabilitiesArray)
-    public
-    payable
-    {
-        Purchase();
-        //Obtain total price
-        uint i = 0;
-        uint256 price = 0;
-
-        AvailabilityI availability;
-        while (i < availabilitiesArray.length) {
-
-            availability = AvailabilityI(availabilitiesArray[i]);
-            uint256 availPrice=availability.getPrice();
-            price += availPrice;
-            //Lock the availability until all checks are done & transfer price funds
-            availability.lock.value(availPrice)();
-            //TODO Here can fail if availability is already taken
-            i++;
-        }
-
-        //Check if payed amount are correct
-        if (msg.value != price){
-            //Revert locks
-            i = 0;
-            while (i < availabilitiesArray.length) {
-                availability = AvailabilityI(availabilitiesArray[i]);
-                availability.abort();
-            }
-        }
-        require(msg.value == price);
-
-        //Purchase all availabilities
-        i = 0;
-        while (i < availabilitiesArray.length) {
-            availability = AvailabilityI(availabilitiesArray[i]);
-            availability.purchase();
-        }
-    }
+//    function purchase(address[] availabilitiesArray)
+//    public
+//    payable
+//    {
+//        Purchase();
+//        //Obtain total price
+//        uint i = 0;
+//        uint256 price = 0;
+//
+//        AvailabilityI availability;
+//        while (i < availabilitiesArray.length) {
+//
+//            availability = AvailabilityI(availabilitiesArray[i]);
+//            uint256 availPrice=availability.getPrice();
+//            price += availPrice;
+//            //Lock the availability until all checks are done & transfer price funds
+//            availability.lock.value(availPrice)();
+//            //TODO Here can fail if availability is already taken
+//            i++;
+//        }
+//
+//        //Check if payed amount are correct
+//        if (msg.value != price){
+//            //Revert locks
+//            i = 0;
+//            while (i < availabilitiesArray.length) {
+//                availability = AvailabilityI(availabilitiesArray[i]);
+//                availability.unlock();
+//            }
+//        }
+//        require(msg.value == price);
+//
+//        //Purchase all availabilities
+//        i = 0;
+//        while (i < availabilitiesArray.length) {
+//            availability = AvailabilityI(availabilitiesArray[i]);
+//            availability.purchase();
+//        }
+//    }
 }

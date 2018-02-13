@@ -7,7 +7,7 @@ var AddressSet =artifacts.require("AddressSet.sol");
 
 module.exports = function(deployer) {
   deployer.deploy(AddressSet);
-  deployer.deploy(AvailabilityContract,0x00,200);
+  deployer.deploy(AvailabilityContract,0x00,200000);
   deployer.link(AddressSet,HotelContract);
   deployer.deploy(HotelContract,0x00);
   deployer.link(AddressSet,MainContract);

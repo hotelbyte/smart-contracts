@@ -6,5 +6,5 @@ interface RoomI {
 
     function removeAvailability(address availabilityAddress) public;
 
-    function purchase(address[] availabilitiesArray) public payable;
+//    function purchase(address[] availabilitiesArray) public payable;
 }
