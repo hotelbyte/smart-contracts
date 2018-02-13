@@ -67,6 +67,7 @@ contract AvailabilityContract is AvailabilityI {
     {
         uint dividedPrice = changedPrice / 2;
         require((2 * dividedPrice) == changedPrice);
+        require(this.balance == 0);
         price = changedPrice;
     }
 
@@ -113,10 +114,5 @@ contract AvailabilityContract is AvailabilityI {
     {
         Invalidate();
         state = State.Inactive;
-        if (buyer != address(0)) {
-            buyer.transfer(this.balance);
-        } else if (this.balance > 0) {
-            hotel.transfer(this.balance);
-        }
     }
 }

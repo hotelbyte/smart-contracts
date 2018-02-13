@@ -5,13 +5,15 @@ var RoomContract =artifacts.require("RoomContract.sol");
 
 var AddressSet =artifacts.require("AddressSet.sol");
 
-module.exports = function(deployer) {
-  deployer.deploy(AddressSet);
-  deployer.deploy(AvailabilityContract,0x00,200000);
+module.exports = (deployer, network, accounts) => {
+  const adminAddress = accounts[0];
+  const deployAddress = accounts[1];
+
+  deployer.deploy(AddressSet,{from: deployAddress});
+  deployer.deploy(AvailabilityContract,adminAddress,200000,{from: deployAddress});
   deployer.link(AddressSet,HotelContract);
-  deployer.deploy(HotelContract,0x00);
+  deployer.deploy(HotelContract,adminAddress,{from: deployAddress});
   deployer.link(AddressSet,MainContract);
-  deployer.deploy(MainContract);
+  deployer.deploy(MainContract,{from: deployAddress});
   deployer.link(AddressSet,RoomContract);
-  deployer.deploy(RoomContract,0x00);
 };
